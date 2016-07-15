@@ -7,9 +7,14 @@
 const unsigned int VIDEO_MODE_WIDTH = 1600, VIDEO_MODE_HEIGHT = 1200;
 const unsigned int CELL_SHAPE_SIZE = 16;
 const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
+const unsigned int FLASH_MESSAGE_OFFSET_X = 16;
+const unsigned int FLASH_MESSAGE_OFFSET_Y = 12;
 const sf::Color CELL_COLOR(150, 50, 250);
+const sf::Color FLASH_MESSAGE_COLOR(sf::Color::Yellow);
 const sf::Int32 MILLISECONDS_PER_GENERATION = 1000 / 60;
 const sf::Int32 SLOW_MOTION_MILLISECONDS_PER_GENERATION = 1000 / 2;
+const sf::Int32 MILLISECONDS_DISPLAY_FLASH_MESSAGE = 1000 * 3;
+const sf::Int32 MILLISECONDS_FADE_FLASH_MESSAGE = 1000 * 2 / 3;
 
 // Helper to get the array size statically
 template<typename TArrayType, std::size_t TArraySize>
@@ -175,6 +180,86 @@ void add_block(CellContainer& state, CellOffset offset = {0, 0}) {
     add_shape(state, cells, offset);
 }
 
+
+sf::Font load_font(const std::string& filename) {
+    sf::Font font;
+
+    if (!font.loadFromFile(filename)) {
+        std::cerr << "Failed to load font: " << filename << "\n";
+    }
+
+    return font;
+}
+
+class FlashMessage : public sf::Text {
+public:
+    FlashMessage()
+        : milliseconds_to_display_(MILLISECONDS_DISPLAY_FLASH_MESSAGE)
+        , milliseconds_to_fade_(MILLISECONDS_FADE_FLASH_MESSAGE)
+        , is_displayed_(false)
+        , base_color_(sf::Text::getColor())
+    {
+    }
+
+    FlashMessage(const sf::Font& font, unsigned int character_size=30)
+        : sf::Text("", font, character_size)
+        , milliseconds_to_display_(MILLISECONDS_DISPLAY_FLASH_MESSAGE)
+        , milliseconds_to_fade_(MILLISECONDS_FADE_FLASH_MESSAGE)
+        , is_displayed_(false)
+        , base_color_(sf::Text::getColor())
+    {
+    }
+
+    void setColor(const sf::Color& color) {
+        base_color_ = color;
+        sf::Text::setColor(color);
+    }
+
+    const sf::Color& getColor() const {
+        return base_color_;
+    }
+
+    void Display(const std::string& message) {
+        is_displayed_ = true;
+        setString(message);
+        sf::Text::setColor(base_color_);
+        timer_.restart();
+    }
+
+    void Update() {
+        sf::Int32 time_message_displayed = timer_.getElapsedTime().asMilliseconds();
+
+        if(time_message_displayed < milliseconds_to_display_) {
+            // No-op
+        } else if(time_message_displayed < milliseconds_to_display_ + milliseconds_to_fade_) {
+            sf::Color fade_color = sf::Color(base_color_);
+            fade_color.a = 255 - static_cast<float>(time_message_displayed - milliseconds_to_display_) / milliseconds_to_fade_ * 255;
+            sf::Text::setColor(fade_color);
+        } else {
+            is_displayed_ = false;
+        }
+    }
+
+    void SetDisplayTime(sf::Int32 milliseconds_to_display) {
+        milliseconds_to_display_ = milliseconds_to_display;
+    }
+
+    void SetFadeTime(sf::Int32 milliseconds_to_fade) {
+        milliseconds_to_fade_ = milliseconds_to_fade;
+    }
+
+    bool is_displayed() const {
+        return is_displayed_;
+    }
+
+private:
+    sf::Int32 milliseconds_to_display_;
+    sf::Int32 milliseconds_to_fade_;
+    bool is_displayed_;
+    sf::Color base_color_;
+    sf::Clock timer_;
+};
+
 int main(int argc, char* argv[]) {
     initialize_rules();
     CellContainer state;
@@ -188,13 +273,25 @@ int main(int argc, char* argv[]) {
     sf::CircleShape cell_shape(CELL_SHAPE_SIZE / 2); // Takes a radius
     cell_shape.setFillColor(CELL_COLOR);
 
+    sf::Font flash_message_font = load_font("Inconsolata-Regular.ttf");
+    FlashMessage flash_message(flash_message_font);
+    flash_message.setPosition(FLASH_MESSAGE_OFFSET_X, FLASH_MESSAGE_OFFSET_Y);
+    flash_message.setColor(FLASH_MESSAGE_COLOR);
+
     // Center origin on the screen, and make positive-Y axis point up instead of down
     sf::Transform global_transform;
     global_transform.translate(VIDEO_MODE_WIDTH / 2, VIDEO_MODE_HEIGHT / 2);
     global_transform.scale(1.0f, -1.0f);
 
-    bool is_paused = false;
+    bool is_paused = true;
     bool is_in_slow_motion = false;
+
+    const std::string instructions_message(
+        "Hit Space to toggle pause.\n" \
+        "Hit S to toggle slow motion.\n" \
+        "Hit ? or H to display these instructions.\n" \
+        "Hit Escape or Q to quit.");
+    flash_message.Display("Simulation begins paused.\n\n" + instructions_message);
 
     while(window.isOpen()) {
         sf::Event event;
@@ -205,8 +302,13 @@ int main(int argc, char* argv[]) {
             }
 
             if(event.type == sf::Event::KeyReleased) {
+                if(event.key.code == sf::Keyboard::H || (event.key.code == sf::Keyboard::Slash && event.key.shift)) {
+                    flash_message.Display(instructions_message);
+                }
+
                 if(event.key.code == sf::Keyboard::Space) {
                     is_paused = !is_paused;
+                    flash_message.Display(is_paused ? "Paused" : "Unpaused");
 
                     if(!is_paused) {
                         generation_timer.restart();
@@ -215,6 +317,11 @@ int main(int argc, char* argv[]) {
 
                 if(event.key.code == sf::Keyboard::S) {
                     is_in_slow_motion = !is_in_slow_motion;
+                    flash_message.Display(is_in_slow_motion ? "Slow motion activated" : "Normal speed activated");
+                }
+
+                if(event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q) {
+                    window.close();
                 }
             }
         }
@@ -231,6 +338,11 @@ int main(int argc, char* argv[]) {
         }
 
         window.clear(sf::Color::Black);
+
+        if(flash_message.is_displayed()) {
+            flash_message.Update();
+            window.draw(flash_message);
+        }
 
         for(const Cell& cell: state) {
             cell_shape.setPosition(
