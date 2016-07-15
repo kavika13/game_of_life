@@ -2,6 +2,7 @@
 #include <cinttypes>
 #include <iostream>
 #include <map>
+#include <SFML/Window.hpp>
 
 // Helper to get the array size statically
 template<typename TArrayType, std::size_t TArraySize>
@@ -166,5 +167,19 @@ int main(int argc, char* argv[]) {
     std::cout << state << "\n";
     advance(state);
     std::cout << state << "\n";
+
+    sf::Window window(sf::VideoMode(800, 600), "My window");
+    window.setVerticalSyncEnabled(true);
+
+    while (window.isOpen()) {
+        sf::Event event;
+
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+    }
+
     return 0;
 }
