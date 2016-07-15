@@ -8,6 +8,7 @@ const unsigned int CELL_SHAPE_SIZE = 16;
 const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
 const unsigned int FLASH_MESSAGE_OFFSET_X = 16;
 const unsigned int FLASH_MESSAGE_OFFSET_Y = 12;
+const unsigned int VIEWPORT_FIT_CELL_MARGIN = 6;
 const sf::Color CELL_COLOR(150, 50, 250);
 const sf::Color FLASH_MESSAGE_COLOR(sf::Color::Yellow);
 const sf::Int32 MILLISECONDS_PER_GENERATION = 1000 / 60;
@@ -21,6 +22,7 @@ constexpr std::size_t array_size(const TArrayType (&array)[TArraySize]) { return
 
 typedef std::int64_t CellDimension;
 typedef std::tuple<CellDimension, CellDimension> CellOffset;
+typedef std::tuple<CellOffset, CellOffset> CellRect;
 
 class Cell {
 public:
@@ -76,6 +78,32 @@ std::ostream& operator<<(std::ostream& os, const CellContainer& cells) {
         os << cell << ", ";
     }
     return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const CellOffset& offset) {
+    return os << "<" << std::get<0>(offset) << ", " << std::get<1>(offset) << ">";
+}
+
+CellRect get_bounds(const CellContainer& cells) {
+    CellOffset lower_bound, upper_bound;
+
+    for(const Cell& cell: cells) {
+        std::get<0>(lower_bound) = std::min(cell.X(), std::get<0>(lower_bound));
+        std::get<1>(lower_bound) = std::min(cell.Y(), std::get<1>(lower_bound));
+        std::get<0>(upper_bound) = std::max(cell.X(), std::get<0>(upper_bound));
+        std::get<1>(upper_bound) = std::max(cell.Y(), std::get<1>(upper_bound));
+    }
+
+    return CellRect(
+        lower_bound,
+        CellOffset(
+            std::get<0>(upper_bound) - std::get<0>(lower_bound),
+            std::get<1>(upper_bound) - std::get<1>(lower_bound))
+    );
+}
+
+std::ostream& operator<<(std::ostream& os, const CellRect& rect) {
+    return os << "<" << std::get<0>(rect) << ", " << std::get<1>(rect) << ">";
 }
 
 unsigned int count_bits_set(unsigned int value) {
@@ -285,11 +313,38 @@ int main(int argc, char* argv[]) {
     sf::Transform viewport_transform;
     float viewportX, viewportY, viewportZoom;
 
-    const auto set_viewport = [&](float x = 0.0f, float y = 0.0f, float zoom = 1.0f) {
-        viewportX = x, viewportY = y, viewportZoom = zoom;
-        viewport_transform = sf::Transform().scale(viewportZoom, viewportZoom).translate(x, y);
+    const auto set_viewport = [&]() {
+        viewport_transform = sf::Transform()
+            .scale(viewportZoom, viewportZoom)
+            .translate(viewportX, viewportY);
     };
-    set_viewport();
+
+    const auto reset_viewport = [&]() {
+        viewportX = 0.0f, viewportY = 0.0f, viewportZoom = 1.0f;
+        set_viewport();
+    };
+
+    const auto fit_viewport = [&]() {
+        CellRect rect = get_bounds(state);
+        CellOffset lower_bound = std::get<0>(rect), dimensions = std::get<1>(rect);
+        CellDimension cells_width = std::get<0>(dimensions) + 1;
+        CellDimension cells_height = std::get<1>(dimensions) + 1;
+
+        viewportZoom = std::min(
+            VIDEO_MODE_WIDTH / CELL_GRID_SIZE / static_cast<float>(cells_width + VIEWPORT_FIT_CELL_MARGIN),
+            VIDEO_MODE_HEIGHT / CELL_GRID_SIZE / static_cast<float>(cells_height + VIEWPORT_FIT_CELL_MARGIN));
+        viewportX = -(VIDEO_MODE_WIDTH / 2.0f / viewportZoom) - std::get<0>(lower_bound) * CELL_GRID_SIZE;
+        viewportY = -(VIDEO_MODE_HEIGHT / 2.0f / viewportZoom) - std::get<1>(lower_bound) * CELL_GRID_SIZE;
+
+        float cell_width_delta = VIDEO_MODE_WIDTH - cells_width * CELL_GRID_SIZE * viewportZoom;
+        float cell_height_delta = VIDEO_MODE_HEIGHT - cells_height * CELL_GRID_SIZE * viewportZoom;
+        viewportX += cell_width_delta / 2.0f / viewportZoom;
+        viewportY += cell_height_delta / 2.0f / viewportZoom;
+
+        set_viewport();
+    };
+
+    reset_viewport();
 
     bool is_paused = true;
     bool is_in_slow_motion = false;
@@ -301,6 +356,7 @@ int main(int argc, char* argv[]) {
         "Hold the Shift key to move the viewport more quickly.\n" \
         "Hit Z to zoom the viewport.\n" \
         "Hit X to zoom out the viewport.\n" \
+        "Hit F to fit the viewport to the alive cells.\n" \
         "Hit R to reset the viewport.\n" \
         "Hit ? or H to display these instructions.\n" \
         "Hit Escape or Q to quit.");
@@ -334,7 +390,11 @@ int main(int argc, char* argv[]) {
                 }
 
                 if(event.key.code == sf::Keyboard::R) {
-                    set_viewport();
+                    reset_viewport();
+                }
+
+                if(event.key.code == sf::Keyboard::F) {
+                    fit_viewport();
                 }
 
                 if(event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q) {
@@ -378,7 +438,7 @@ int main(int argc, char* argv[]) {
                 }
 
                 if(is_viewport_changed) {
-                    set_viewport(viewportX, viewportY, viewportZoom);
+                    set_viewport();
                 }
             }
         }
