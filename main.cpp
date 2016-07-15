@@ -282,6 +282,15 @@ int main(int argc, char* argv[]) {
     global_transform.translate(VIDEO_MODE_WIDTH / 2, VIDEO_MODE_HEIGHT / 2);
     global_transform.scale(1.0f, -1.0f);
 
+    sf::Transform viewport_transform;
+    float viewportX, viewportY, viewportZoom;
+
+    const auto set_viewport = [&](float x = 0.0f, float y = 0.0f, float zoom = 1.0f) {
+        viewportX = x, viewportY = y, viewportZoom = zoom;
+        viewport_transform = sf::Transform().scale(viewportZoom, viewportZoom).translate(x, y);
+    };
+    set_viewport();
+
     bool is_paused = true;
     bool is_in_slow_motion = false;
 
@@ -290,6 +299,9 @@ int main(int argc, char* argv[]) {
         "Hit S to toggle slow motion.\n" \
         "Hit Arrow Keys to shift the viewport.\n" \
         "Hold the Shift key to move the viewport more quickly.\n" \
+        "Hit Z to zoom the viewport.\n" \
+        "Hit X to zoom out the viewport.\n" \
+        "Hit R to reset the viewport.\n" \
         "Hit ? or H to display these instructions.\n" \
         "Hit Escape or Q to quit.");
     flash_message.Display("Simulation begins paused.\n\n" + instructions_message);
@@ -321,28 +333,52 @@ int main(int argc, char* argv[]) {
                     flash_message.Display(is_in_slow_motion ? "Slow motion activated" : "Normal speed activated");
                 }
 
+                if(event.key.code == sf::Keyboard::R) {
+                    set_viewport();
+                }
+
                 if(event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q) {
                     window.close();
                 }
             }
 
             if(event.type == sf::Event::KeyPressed) {
-                const float distance = event.key.shift ? CELL_GRID_SIZE * 10 : CELL_GRID_SIZE;
+                bool is_viewport_changed(false);
+                const float distance = (event.key.shift ? CELL_GRID_SIZE * 10 : CELL_GRID_SIZE)
+                    / (viewportZoom < 1.0f ? viewportZoom : 1.0f);
 
                 if(event.key.code == sf::Keyboard::Left) {
-                    global_transform.translate(distance, 0);
+                    is_viewport_changed = true;
+                    viewportX += distance;
                 }
 
                 if(event.key.code == sf::Keyboard::Right) {
-                    global_transform.translate(-distance, 0);
+                    is_viewport_changed = true;
+                    viewportX -= distance;
                 }
 
                 if(event.key.code == sf::Keyboard::Down) {
-                    global_transform.translate(0, distance);
+                    is_viewport_changed = true;
+                    viewportY += distance;
                 }
 
                 if(event.key.code == sf::Keyboard::Up) {
-                    global_transform.translate(0, -distance);
+                    is_viewport_changed = true;
+                    viewportY -= distance;
+                }
+
+                if(event.key.code == sf::Keyboard::Z) {
+                    is_viewport_changed = true;
+                    viewportZoom *= 2.0f;
+                }
+
+                if(event.key.code == sf::Keyboard::X) {
+                    is_viewport_changed = true;
+                    viewportZoom /= 2.0f;
+                }
+
+                if(is_viewport_changed) {
+                    set_viewport(viewportX, viewportY, viewportZoom);
                 }
             }
         }
@@ -369,7 +405,7 @@ int main(int argc, char* argv[]) {
             cell_shape.setPosition(
                 cell.X() * CELL_GRID_SIZE,
                 cell.Y() * CELL_GRID_SIZE);
-            window.draw(cell_shape, global_transform);
+            window.draw(cell_shape, global_transform * viewport_transform);
         }
 
         window.display();
