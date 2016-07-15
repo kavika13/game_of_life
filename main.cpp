@@ -288,6 +288,8 @@ int main(int argc, char* argv[]) {
     const std::string instructions_message(
         "Hit Space to toggle pause.\n" \
         "Hit S to toggle slow motion.\n" \
+        "Hit Arrow Keys to shift the viewport.\n" \
+        "Hold the Shift key to move the viewport more quickly.\n" \
         "Hit ? or H to display these instructions.\n" \
         "Hit Escape or Q to quit.");
     flash_message.Display("Simulation begins paused.\n\n" + instructions_message);
@@ -321,6 +323,26 @@ int main(int argc, char* argv[]) {
 
                 if(event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q) {
                     window.close();
+                }
+            }
+
+            if(event.type == sf::Event::KeyPressed) {
+                const float distance = event.key.shift ? CELL_GRID_SIZE * 10 : CELL_GRID_SIZE;
+
+                if(event.key.code == sf::Keyboard::Left) {
+                    global_transform.translate(distance, 0);
+                }
+
+                if(event.key.code == sf::Keyboard::Right) {
+                    global_transform.translate(-distance, 0);
+                }
+
+                if(event.key.code == sf::Keyboard::Down) {
+                    global_transform.translate(0, distance);
+                }
+
+                if(event.key.code == sf::Keyboard::Up) {
+                    global_transform.translate(0, -distance);
                 }
             }
         }
