@@ -221,10 +221,24 @@ void load_state(const std::string& filename, CellContainer& state) {
     std::string line;
     int line_number = 1;
 
+    const auto matches_comment = [](const std::string& line) {
+        const std::string comments[] = {"//", "#", ";"};
+        return std::any_of(
+            comments,
+            comments + array_size(comments),
+            [&](const std::string& prefix) {
+                return std::equal(prefix.begin(), prefix.end(), line.begin());
+            });
+    };
+
     while (std::getline(infile, line)) {
         std::istringstream iss(line);
         CellDimension x, y;
         char c;
+
+        if(line.empty() || matches_comment(line)) {
+            continue;
+        }
 
         iss.ignore(); // Skip opening parentheses
 
