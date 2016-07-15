@@ -1,6 +1,9 @@
 #include <unordered_set>
 #include <cinttypes>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <SFML/Graphics.hpp>
 
 const unsigned int VIDEO_MODE_WIDTH = 1600, VIDEO_MODE_HEIGHT = 1200;
@@ -208,6 +211,31 @@ void add_block(CellContainer& state, CellOffset offset = {0, 0}) {
     add_shape(state, cells, offset);
 }
 
+void load_state(const std::string& filename, CellContainer& state) {
+    std::ifstream infile(filename);
+
+    if(infile.fail()) {
+        throw std::runtime_error(std::string("Failed to open file: ") + filename);
+    }
+
+    std::string line;
+    int line_number = 1;
+
+    while (std::getline(infile, line)) {
+        std::istringstream iss(line);
+        CellDimension x, y;
+        char c;
+
+        iss.ignore(); // Skip opening parentheses
+
+        if (!(iss >> x >> c >> y) && (c == ',')) {
+            throw std::runtime_error(std::string("Failed to parse file at line: ") + std::to_string(line_number));
+        }
+
+        state.insert(Cell(x, y));
+        ++line_number;
+    }
+}
 
 sf::Font load_font(const std::string& filename) {
     sf::Font font;
@@ -292,7 +320,7 @@ int main(int argc, char* argv[]) {
     initialize_rules();
     CellContainer state;
 
-    add_spinner(state);
+    load_state("input.txt", state);
 
     sf::RenderWindow window(sf::VideoMode(VIDEO_MODE_WIDTH, VIDEO_MODE_HEIGHT), "Conway's Game of Life");
 
