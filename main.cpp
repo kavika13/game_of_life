@@ -1,7 +1,6 @@
 #include <unordered_set>
 #include <cinttypes>
 #include <iostream>
-#include <map>
 #include <SFML/Graphics.hpp>
 
 const unsigned int VIDEO_MODE_WIDTH = 1600, VIDEO_MODE_HEIGHT = 1200;
