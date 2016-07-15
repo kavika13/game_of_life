@@ -2,7 +2,14 @@
 #include <cinttypes>
 #include <iostream>
 #include <map>
-#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+
+const unsigned int VIDEO_MODE_WIDTH = 1600, VIDEO_MODE_HEIGHT = 1200;
+const unsigned int CELL_SHAPE_SIZE = 16;
+const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
+const sf::Color CELL_COLOR(150, 50, 250);
+const sf::Int32 MILLISECONDS_PER_GENERATION = 1000 / 60;
+const sf::Int32 SLOW_MOTION_MILLISECONDS_PER_GENERATION = 1000 / 2;
 
 // Helper to get the array size statically
 template<typename TArrayType, std::size_t TArraySize>
@@ -24,6 +31,14 @@ public:
         result = result * 23 + std::hash<CellDimension>()(x_);
         result = result * 23 + std::hash<CellDimension>()(y_);
         return result;
+    }
+
+    CellDimension X() const {
+        return x_;
+    }
+
+    CellDimension Y() const {
+        return y_;
     }
 
 private:
@@ -163,22 +178,68 @@ void add_block(CellContainer& state, CellOffset offset = {0, 0}) {
 int main(int argc, char* argv[]) {
     initialize_rules();
     CellContainer state;
+
     add_spinner(state);
-    std::cout << state << "\n";
-    advance(state);
-    std::cout << state << "\n";
 
-    sf::Window window(sf::VideoMode(800, 600), "My window");
-    window.setVerticalSyncEnabled(true);
+    sf::RenderWindow window(sf::VideoMode(VIDEO_MODE_WIDTH, VIDEO_MODE_HEIGHT), "Conway's Game of Life");
 
-    while (window.isOpen()) {
+    sf::Clock generation_timer;
+
+    sf::CircleShape cell_shape(CELL_SHAPE_SIZE / 2); // Takes a radius
+    cell_shape.setFillColor(CELL_COLOR);
+
+    // Center origin on the screen, and make positive-Y axis point up instead of down
+    sf::Transform global_transform;
+    global_transform.translate(VIDEO_MODE_WIDTH / 2, VIDEO_MODE_HEIGHT / 2);
+    global_transform.scale(1.0f, -1.0f);
+
+    bool is_paused = false;
+    bool is_in_slow_motion = false;
+
+    while(window.isOpen()) {
         sf::Event event;
 
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+        while(window.pollEvent(event)) {
+            if(event.type == sf::Event::Closed) {
                 window.close();
             }
+
+            if(event.type == sf::Event::KeyReleased) {
+                if(event.key.code == sf::Keyboard::Space) {
+                    is_paused = !is_paused;
+
+                    if(!is_paused) {
+                        generation_timer.restart();
+                    }
+                }
+
+                if(event.key.code == sf::Keyboard::S) {
+                    is_in_slow_motion = !is_in_slow_motion;
+                }
+            }
         }
+
+        const sf::Int32 minimum_frame_time = is_in_slow_motion
+            ? SLOW_MOTION_MILLISECONDS_PER_GENERATION
+            : MILLISECONDS_PER_GENERATION;
+
+        if(!is_paused) {
+            if(generation_timer.getElapsedTime().asMilliseconds() >= minimum_frame_time) {
+                advance(state);
+                generation_timer.restart();
+            }
+        }
+
+        window.clear(sf::Color::Black);
+
+        for(const Cell& cell: state) {
+            cell_shape.setPosition(
+                cell.X() * CELL_GRID_SIZE,
+                cell.Y() * CELL_GRID_SIZE);
+            window.draw(cell_shape, global_transform);
+        }
+
+        window.display();
     }
 
     return 0;
