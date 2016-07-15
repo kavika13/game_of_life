@@ -11,6 +11,7 @@ const unsigned int FLASH_MESSAGE_OFFSET_Y = 12;
 const unsigned int VIEWPORT_FIT_CELL_MARGIN = 6;
 const sf::Color CELL_COLOR(150, 50, 250);
 const sf::Color FLASH_MESSAGE_COLOR(sf::Color::Yellow);
+const sf::Int32 MILLISECONDS_AUTO_FIT_FREQUENCY = 1000;
 const sf::Int32 MILLISECONDS_PER_GENERATION = 1000 / 60;
 const sf::Int32 SLOW_MOTION_MILLISECONDS_PER_GENERATION = 1000 / 2;
 const sf::Int32 MILLISECONDS_DISPLAY_FLASH_MESSAGE = 1000 * 3;
@@ -313,6 +314,8 @@ int main(int argc, char* argv[]) {
     sf::Transform viewport_transform;
     float viewportX, viewportY, viewportZoom;
 
+    sf::Clock auto_fit_timer;
+
     const auto set_viewport = [&]() {
         viewport_transform = sf::Transform()
             .scale(viewportZoom, viewportZoom)
@@ -348,6 +351,7 @@ int main(int argc, char* argv[]) {
 
     bool is_paused = true;
     bool is_in_slow_motion = false;
+    bool is_auto_fit_enabled = false;
 
     const std::string instructions_message(
         "Hit Space to toggle pause.\n" \
@@ -357,6 +361,7 @@ int main(int argc, char* argv[]) {
         "Hit Z to zoom the viewport.\n" \
         "Hit X to zoom out the viewport.\n" \
         "Hit F to fit the viewport to the alive cells.\n" \
+        "Hit A to toggle viewport auto-fit.\n" \
         "Hit R to reset the viewport.\n" \
         "Hit ? or H to display these instructions.\n" \
         "Hit Escape or Q to quit.");
@@ -395,6 +400,16 @@ int main(int argc, char* argv[]) {
 
                 if(event.key.code == sf::Keyboard::F) {
                     fit_viewport();
+                }
+
+                if(event.key.code == sf::Keyboard::A) {
+                    is_auto_fit_enabled = !is_auto_fit_enabled;
+                    flash_message.Display(is_auto_fit_enabled ? "Auto-fit enabled" : "Auto-fit disabled");
+
+                    if(is_auto_fit_enabled) {
+                        fit_viewport();
+                        auto_fit_timer.restart();
+                    }
                 }
 
                 if(event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q) {
@@ -438,8 +453,20 @@ int main(int argc, char* argv[]) {
                 }
 
                 if(is_viewport_changed) {
+                    if(is_auto_fit_enabled) {
+                        flash_message.Display("Auto-fit disabled");
+                        is_auto_fit_enabled = false;
+                    }
+
                     set_viewport();
                 }
+            }
+        }
+
+        if(is_auto_fit_enabled) {
+            if(auto_fit_timer.getElapsedTime().asMilliseconds() >= MILLISECONDS_AUTO_FIT_FREQUENCY) {
+                fit_viewport();
+                auto_fit_timer.restart();
             }
         }
 
