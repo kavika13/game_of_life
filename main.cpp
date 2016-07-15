@@ -525,16 +525,16 @@ int main(int argc, char* argv[]) {
 
         window.clear(sf::Color::Black);
 
-        if(flash_message.is_displayed()) {
-            flash_message.Update();
-            window.draw(flash_message);
-        }
-
         for(const Cell& cell: state) {
             cell_shape.setPosition(
                 cell.X() * CELL_GRID_SIZE,
                 cell.Y() * CELL_GRID_SIZE);
             window.draw(cell_shape, global_transform * viewport_transform);
+        }
+
+        if(flash_message.is_displayed()) {
+            flash_message.Update();
+            window.draw(flash_message);
         }
 
         window.display();
