@@ -11,15 +11,17 @@ const unsigned int VIDEO_MODE_WIDTH = 2048, VIDEO_MODE_HEIGHT = 1536;
 const unsigned int FLASH_MESSAGE_OFFSET_X = 16;
 const unsigned int FLASH_MESSAGE_OFFSET_Y = 12;
 const unsigned int FLASH_MESSAGE_CHARACTER_SIZE = 30;
+const unsigned int CELL_SHAPE_SIZE = 16;
+const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
 #else
 const unsigned int VIDEO_MODE_WIDTH = 1024, VIDEO_MODE_HEIGHT = 768;
 const unsigned int FLASH_MESSAGE_OFFSET_X = 8;
 const unsigned int FLASH_MESSAGE_OFFSET_Y = 6;
 const unsigned int FLASH_MESSAGE_CHARACTER_SIZE = 15;
+const unsigned int CELL_SHAPE_SIZE = 8;
+const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 1;
 #endif
 
-const unsigned int CELL_SHAPE_SIZE = 16;
-const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
 const unsigned int VIEWPORT_FIT_CELL_MARGIN = 6;
 const sf::Color CELL_COLOR(150, 50, 250);
 const sf::Color FLASH_MESSAGE_COLOR(sf::Color::Yellow);
