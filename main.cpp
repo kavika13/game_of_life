@@ -6,7 +6,12 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 
-const unsigned int VIDEO_MODE_WIDTH = 1600, VIDEO_MODE_HEIGHT = 1200;
+#ifdef __APPLE__  // TODO: Hack - can't easily detect Retina without linking Objective-C from this app
+const unsigned int VIDEO_MODE_WIDTH = 2048, VIDEO_MODE_HEIGHT = 1536;
+#else
+const unsigned int VIDEO_MODE_WIDTH = 1024, VIDEO_MODE_HEIGHT = 768;
+#endif
+
 const unsigned int CELL_SHAPE_SIZE = 16;
 const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
 const unsigned int FLASH_MESSAGE_OFFSET_X = 16;
