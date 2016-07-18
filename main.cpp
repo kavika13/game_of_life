@@ -8,14 +8,18 @@
 
 #ifdef __APPLE__  // TODO: Hack - can't easily detect Retina without linking Objective-C from this app
 const unsigned int VIDEO_MODE_WIDTH = 2048, VIDEO_MODE_HEIGHT = 1536;
+const unsigned int FLASH_MESSAGE_OFFSET_X = 16;
+const unsigned int FLASH_MESSAGE_OFFSET_Y = 12;
+const unsigned int FLASH_MESSAGE_CHARACTER_SIZE = 30;
 #else
 const unsigned int VIDEO_MODE_WIDTH = 1024, VIDEO_MODE_HEIGHT = 768;
+const unsigned int FLASH_MESSAGE_OFFSET_X = 8;
+const unsigned int FLASH_MESSAGE_OFFSET_Y = 6;
+const unsigned int FLASH_MESSAGE_CHARACTER_SIZE = 15;
 #endif
 
 const unsigned int CELL_SHAPE_SIZE = 16;
 const unsigned int CELL_GRID_SIZE = CELL_SHAPE_SIZE + 2;
-const unsigned int FLASH_MESSAGE_OFFSET_X = 16;
-const unsigned int FLASH_MESSAGE_OFFSET_Y = 12;
 const unsigned int VIEWPORT_FIT_CELL_MARGIN = 6;
 const sf::Color CELL_COLOR(150, 50, 250);
 const sf::Color FLASH_MESSAGE_COLOR(sf::Color::Yellow);
@@ -379,7 +383,7 @@ int main(int argc, char* argv[]) {
     cell_shape.setFillColor(CELL_COLOR);
 
     sf::Font flash_message_font = load_font("Inconsolata-Regular.ttf");
-    FlashMessage flash_message(flash_message_font);
+    FlashMessage flash_message(flash_message_font, FLASH_MESSAGE_CHARACTER_SIZE);
     flash_message.setPosition(
 		static_cast<float>(FLASH_MESSAGE_OFFSET_X),
 		static_cast<float>(FLASH_MESSAGE_OFFSET_Y));
