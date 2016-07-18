@@ -121,14 +121,14 @@ unsigned int count_bits_set(unsigned int value) {
 }
 
 CellOffset neighbor_offsets[8] {
-    {-1, 1},
-    {0, 1},
-    {1, 1},
-    {-1, 0},
-    {1, 0},
-    {-1, -1},
-    {0, -1},
-    {1, -1},
+    CellOffset(-1, 1),
+	CellOffset(0, 1),
+	CellOffset(1, 1),
+	CellOffset(-1, 0),
+	CellOffset(1, 0),
+	CellOffset(-1, -1),
+	CellOffset(0, -1),
+	CellOffset(1, -1),
 };
 const std::size_t potential_neighbor_count = array_size(neighbor_offsets);
 
@@ -221,7 +221,7 @@ void add_shape(CellContainer& state, const Cell (&cells)[cells_count], CellOffse
     }
 }
 
-void add_spinner(CellContainer& state, CellOffset offset = {0, 0}) {
+void add_spinner(CellContainer& state, CellOffset offset = CellOffset(0, 0)) {
     Cell cells[] {
         Cell(0, 0),
         Cell(1, 0),
@@ -230,7 +230,7 @@ void add_spinner(CellContainer& state, CellOffset offset = {0, 0}) {
     add_shape(state, cells, offset);
 }
 
-void add_block(CellContainer& state, CellOffset offset = {0, 0}) {
+void add_block(CellContainer& state, CellOffset offset = CellOffset(0, 0)) {
     Cell cells[] {
         Cell(0, 0),
         Cell(1, 0),
@@ -332,7 +332,7 @@ public:
             // No-op
         } else if(time_message_displayed < milliseconds_to_display_ + milliseconds_to_fade_) {
             sf::Color fade_color = sf::Color(base_color_);
-            fade_color.a = 255 - static_cast<float>(time_message_displayed - milliseconds_to_display_) / milliseconds_to_fade_ * 255;
+            fade_color.a = static_cast<sf::Uint8>(255 - static_cast<float>(time_message_displayed - milliseconds_to_display_) / milliseconds_to_fade_ * 255);
             sf::Text::setColor(fade_color);
         } else {
             is_displayed_ = false;
@@ -375,7 +375,9 @@ int main(int argc, char* argv[]) {
 
     sf::Font flash_message_font = load_font("Inconsolata-Regular.ttf");
     FlashMessage flash_message(flash_message_font);
-    flash_message.setPosition(FLASH_MESSAGE_OFFSET_X, FLASH_MESSAGE_OFFSET_Y);
+    flash_message.setPosition(
+		static_cast<float>(FLASH_MESSAGE_OFFSET_X),
+		static_cast<float>(FLASH_MESSAGE_OFFSET_Y));
     flash_message.setColor(FLASH_MESSAGE_COLOR);
 
     // Center origin on the screen, and make positive-Y axis point up instead of down
@@ -557,8 +559,8 @@ int main(int argc, char* argv[]) {
 
         for(const Cell& cell: state) {
             cell_shape.setPosition(
-                cell.X() * CELL_GRID_SIZE,
-                cell.Y() * CELL_GRID_SIZE);
+                static_cast<float>(cell.X() * CELL_GRID_SIZE),
+				static_cast<float>(cell.Y() * CELL_GRID_SIZE));
             window.draw(cell_shape, global_transform * viewport_transform);
         }
 
