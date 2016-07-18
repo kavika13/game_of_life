@@ -152,14 +152,14 @@ unsigned int neighbor_mask(const CellContainer& state, const Cell& cell) {
     return mask;
 }
 
-void advance(CellContainer& state) {
+void advance(CellContainer& state, CellContainer& changed_cells) {
     CellContainer to_add;
     CellContainer to_remove;
 
-    for(const Cell& cell: state) {
+    for(const Cell& cell: changed_cells) {
         unsigned int mask = neighbor_mask(state, cell);
 
-        if(cell_die_lookup[mask]) {
+        if(state.find(cell) != state.end() && cell_die_lookup[mask]) {
             to_remove.insert(cell);
         }
 
@@ -176,11 +176,40 @@ void advance(CellContainer& state) {
         }
     }
 
+    const auto add_neighbors_to_changed = [&](const Cell& cell) {
+        for(std::size_t i = 0; i < potential_neighbor_count; ++i) {
+            Cell neighbor(cell.offset(neighbor_offsets[i]));
+
+            if(state.find(neighbor) != state.end()) {
+                changed_cells.insert(neighbor);
+            }
+        }
+    };
+
+    CellContainer::const_iterator current_cell = changed_cells.cbegin();
+
+    while(current_cell != changed_cells.end()) {
+        const CellContainer& container = state.find(*current_cell) != state.end()
+            ? to_add
+            : to_remove;
+
+        if(container.find(*current_cell) == container.end()) {
+            current_cell = changed_cells.erase(current_cell); // Erase returns the next cell
+        } else {
+            ++current_cell;
+        }
+    }
+
     for(const Cell& cell: to_add) {
         state.insert(cell);
+        changed_cells.insert(cell);
+        add_neighbors_to_changed(cell);
     }
+
     for(const Cell& cell: to_remove) {
         state.erase(cell);
+        changed_cells.insert(cell);
+        add_neighbors_to_changed(cell);
     }
 }
 
@@ -335,6 +364,7 @@ int main(int argc, char* argv[]) {
     CellContainer state;
 
     load_state("input.txt", state);
+    CellContainer changed_cells(state);
 
     sf::RenderWindow window(sf::VideoMode(VIDEO_MODE_WIDTH, VIDEO_MODE_HEIGHT), "Conway's Game of Life");
 
@@ -518,7 +548,7 @@ int main(int argc, char* argv[]) {
 
         if(!is_paused) {
             if(generation_timer.getElapsedTime().asMilliseconds() >= minimum_frame_time) {
-                advance(state);
+                advance(state, changed_cells);
                 generation_timer.restart();
             }
         }
