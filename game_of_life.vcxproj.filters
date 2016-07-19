@@ -58,13 +58,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="Inconsolata-Regular.ttf">
+    <Content Include="Inconsolata-Regular.ttf">
       <Filter>Resource Files</Filter>
-    </Font>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="input.txt">
+    <Content Include="input.txt">
       <Filter>Resource Files</Filter>
-    </Text>
+    </Content>
   </ItemGroup>
 </Project>
