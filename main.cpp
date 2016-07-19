@@ -148,6 +148,11 @@ int main(int argc, char* argv[]) {
 
                 if(event.key.code == sf::Keyboard::R) {
                     reset_viewport();
+
+                    if(is_auto_fit_enabled) {
+                        flash_message.Display("Auto-fit disabled");
+                        is_auto_fit_enabled = false;
+                    }
                 }
 
                 if(event.key.code == sf::Keyboard::F) {
