@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		FA2B1E381D3DB7540050BA8D /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = FA2B1E371D3DB7540050BA8D /* ResourcePath.mm */; };
 		FA2B1E3B1D3DB7540050BA8D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2B1E3A1D3DB7540050BA8D /* main.cpp */; };
+		FA3E31251D3DDBCA00661F7D /* cell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E31231D3DDBCA00661F7D /* cell.cpp */; };
+		FA3E31291D3DE20E00661F7D /* gameoflife.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E31271D3DE20E00661F7D /* gameoflife.cpp */; };
+		FA3E312C1D3DE3E000661F7D /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E312A1D3DE3E000661F7D /* resources.cpp */; };
+		FA3E31301D3DE5B500661F7D /* flashmessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */; };
 		FAA538DC1D3DBAC20048D5FF /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAA538DB1D3DBAC20048D5FF /* input.txt */; };
 		FAA538DE1D3DBADC0048D5FF /* Inconsolata-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -19,6 +23,16 @@
 		FA2B1E371D3DB7540050BA8D /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
 		FA2B1E391D3DB7540050BA8D /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
 		FA2B1E3A1D3DB7540050BA8D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		FA3E31231D3DDBCA00661F7D /* cell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cell.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E31241D3DDBCA00661F7D /* cell.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cell.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E31261D3DE20E00661F7D /* arraysize.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = arraysize.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E31271D3DE20E00661F7D /* gameoflife.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gameoflife.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E31281D3DE20E00661F7D /* gameoflife.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gameoflife.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E312A1D3DE3E000661F7D /* resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = resources.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E312B1D3DE3E000661F7D /* resources.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = resources.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E312D1D3DE4A100661F7D /* constants.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = constants.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flashmessage.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E312F1D3DE5B500661F7D /* flashmessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = flashmessage.hpp; sourceTree = SOURCE_ROOT; };
 		FAA538DB1D3DBAC20048D5FF /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = SOURCE_ROOT; };
 		FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inconsolata-Regular.ttf"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -53,6 +67,16 @@
 		FA2B1E341D3DB7540050BA8D /* Game of Life */ = {
 			isa = PBXGroup;
 			children = (
+				FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */,
+				FA3E312F1D3DE5B500661F7D /* flashmessage.hpp */,
+				FA3E312D1D3DE4A100661F7D /* constants.hpp */,
+				FA3E312A1D3DE3E000661F7D /* resources.cpp */,
+				FA3E312B1D3DE3E000661F7D /* resources.hpp */,
+				FA3E31261D3DE20E00661F7D /* arraysize.hpp */,
+				FA3E31271D3DE20E00661F7D /* gameoflife.cpp */,
+				FA3E31281D3DE20E00661F7D /* gameoflife.hpp */,
+				FA3E31231D3DDBCA00661F7D /* cell.cpp */,
+				FA3E31241D3DDBCA00661F7D /* cell.hpp */,
 				FA2B1E371D3DB7540050BA8D /* ResourcePath.mm */,
 				FA2B1E391D3DB7540050BA8D /* ResourcePath.hpp */,
 				FA2B1E3A1D3DB7540050BA8D /* main.cpp */,
@@ -164,8 +188,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA3E31301D3DE5B500661F7D /* flashmessage.cpp in Sources */,
 				FA2B1E3B1D3DB7540050BA8D /* main.cpp in Sources */,
 				FA2B1E381D3DB7540050BA8D /* ResourcePath.mm in Sources */,
+				FA3E31291D3DE20E00661F7D /* gameoflife.cpp in Sources */,
+				FA3E31251D3DDBCA00661F7D /* cell.cpp in Sources */,
+				FA3E312C1D3DE3E000661F7D /* resources.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

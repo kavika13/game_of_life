@@ -138,8 +138,27 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cell.cpp" />
+    <ClCompile Include="flashmessage.cpp" />
+    <ClCompile Include="gameoflife.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="resources.cpp" />
     <ClCompile Include="ResourcePath.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="arraysize.hpp" />
+    <ClInclude Include="cell.hpp" />
+    <ClInclude Include="constants.hpp" />
+    <ClInclude Include="flashmessage.hpp" />
+    <ClInclude Include="gameoflife.hpp" />
+    <ClInclude Include="resources.hpp" />
+    <ClInclude Include="ResourcePath.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Inconsolata-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
