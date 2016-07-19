@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include "ResourcePath.hpp"
 
 #ifdef __APPLE__  // TODO: Hack - can't easily detect Retina without linking Objective-C from this app
 const unsigned int VIDEO_MODE_WIDTH = 2048, VIDEO_MODE_HEIGHT = 1536;
@@ -252,10 +253,10 @@ void add_block(CellContainer& state, CellOffset offset = CellOffset(0, 0)) {
 }
 
 void load_state(const std::string& filename, CellContainer& state) {
-    std::ifstream infile(filename);
+    std::ifstream infile(resourcePath() + filename);
 
     if(infile.fail()) {
-        throw std::runtime_error(std::string("Failed to open file: ") + filename);
+        throw std::runtime_error(std::string("Failed to open file: ") + resourcePath() + filename);
     }
 
     std::string line;
@@ -294,8 +295,8 @@ void load_state(const std::string& filename, CellContainer& state) {
 sf::Font load_font(const std::string& filename) {
     sf::Font font;
 
-    if (!font.loadFromFile(filename)) {
-        std::cerr << "Failed to load font: " << filename << "\n";
+    if (!font.loadFromFile(resourcePath() + filename)) {
+        std::cerr << "Failed to load font: " << resourcePath() + filename << "\n";
     }
 
     return font;
