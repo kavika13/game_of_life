@@ -22,8 +22,12 @@ int main(int argc, char* argv[]) {
     }
 
     sf::Shader shader;
+    bool is_shader_enabled = false;
+    bool is_shader_active = false;
 
     if(load_fragment_shader(shader, "crt.frag")) {
+        is_shader_enabled = true;
+
         shader.setParameter("texture", sf::Shader::CurrentTexture);
         shader.setParameter("textureSize", window.getSize().x, window.getSize().y);
 
@@ -105,18 +109,24 @@ int main(int argc, char* argv[]) {
     bool is_in_slow_motion = false;
     bool is_auto_fit_enabled = false;
 
-    const std::string instructions_message(
-        "Hit Space to toggle pause.\n" \
-        "Hit S to toggle slow motion.\n" \
-        "Hit Arrow Keys to shift the viewport.\n" \
-        "Hold the Shift key to move the viewport more quickly.\n" \
-        "Hit Z to zoom the viewport.\n" \
-        "Hit X to zoom out the viewport.\n" \
-        "Hit F to fit the viewport to the alive cells.\n" \
-        "Hit A to toggle viewport auto-fit.\n" \
-        "Hit R to reset the viewport.\n" \
-        "Hit ? or H to display these instructions.\n" \
-        "Hit Escape or Q to quit.");
+    const auto instructions_message =
+        std::string(
+            "Hit Space to toggle pause.\n" \
+            "Hit S to toggle slow motion.\n") +
+        std::string(
+            "Hit Arrow Keys to shift the viewport.\n" \
+            "Hold the Shift key to move the viewport more quickly.\n" \
+            "Hit Z to zoom the viewport.\n" \
+            "Hit X to zoom out the viewport.\n" \
+            "Hit F to fit the viewport to the alive cells.\n" \
+            "Hit A to toggle viewport auto-fit.\n" \
+            "Hit R to reset the viewport.\n") +
+        std::string(
+            is_shader_enabled ? "Hit C to toggle a retro CRT-like view\n" : "") +
+        std::string(
+            "Hit ? or H to display these instructions.\n" \
+            "Hit Escape or Q to quit.");
+
     flash_message.Display("Simulation begins paused.\n\n" + instructions_message);
 
     while(window.isOpen()) {
@@ -167,6 +177,11 @@ int main(int argc, char* argv[]) {
                         fit_viewport();
                         auto_fit_timer.restart();
                     }
+                }
+
+                if(is_shader_enabled && event.key.code == sf::Keyboard::C) {
+                    is_shader_active = !is_shader_active;
+                    flash_message.Display(is_shader_active ? "Retro-shader enabled" : "Retro-shader disabled");
                 }
 
                 if(event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q) {
@@ -252,23 +267,31 @@ int main(int argc, char* argv[]) {
             render_texture.draw(flash_message);
         }
 
-        frame_shapes[0].setPosition(0, 0);
-        render_texture.draw(frame_shapes[0]);
+        if(is_shader_active) {
+            frame_shapes[0].setPosition(0, 0);
+            render_texture.draw(frame_shapes[0]);
 
-        frame_shapes[0].setPosition(VIDEO_MODE_WIDTH - 1, 0);
-        render_texture.draw(frame_shapes[0]);
+            frame_shapes[0].setPosition(VIDEO_MODE_WIDTH - 1, 0);
+            render_texture.draw(frame_shapes[0]);
 
-        frame_shapes[1].setPosition(0, 0);
-        render_texture.draw(frame_shapes[1]);
+            frame_shapes[1].setPosition(0, 0);
+            render_texture.draw(frame_shapes[1]);
 
-        frame_shapes[1].setPosition(0, VIDEO_MODE_HEIGHT - 1);
-        render_texture.draw(frame_shapes[1]);
+            frame_shapes[1].setPosition(0, VIDEO_MODE_HEIGHT - 1);
+            render_texture.draw(frame_shapes[1]);
+        }
 
         render_texture.display();
 
         const sf::Texture& texture = render_texture.getTexture();
         sf::Sprite sprite(texture);
-        window.draw(sprite, &shader);
+
+        if(is_shader_active) {
+            window.draw(sprite, &shader);
+        } else {
+            window.draw(sprite);
+        }
+
         window.display();
     }
 
