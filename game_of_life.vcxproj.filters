@@ -11,7 +11,7 @@
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms;frag;vert</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +56,11 @@
     <ClInclude Include="resources.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="crt.frag">
+      <Filter>Resource Files</Filter>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Inconsolata-Regular.ttf">

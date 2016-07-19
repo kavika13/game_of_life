@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "gameoflife.hpp"
 #include "resources.hpp"
 #include "flashmessage.hpp"
@@ -13,6 +14,29 @@ int main(int argc, char* argv[]) {
 
     sf::RenderWindow window(sf::VideoMode(VIDEO_MODE_WIDTH, VIDEO_MODE_HEIGHT), "Conway's Game of Life");
 
+    sf::RenderTexture render_texture;
+
+    if(!render_texture.create(window.getSize().x, window.getSize().y)) {
+        std::cerr << "Failed to create render texture\n";
+        return -1;
+    }
+
+    sf::Shader shader;
+
+    if(load_fragment_shader(shader, "crt.frag")) {
+        shader.setParameter("texture", sf::Shader::CurrentTexture);
+        shader.setParameter("textureSize", window.getSize().x, window.getSize().y);
+
+        shader.setParameter("devicePixelRatio", DEVICE_PIXEL_RATIO);
+        shader.setParameter("virtualResolution", VIRTUAL_RESOLUTION_WIDTH, VIRTUAL_RESOLUTION_HEIGHT);
+
+        shader.setParameter("enableScanlines", ENABLE_SCANLINES);
+        shader.setParameter("enablePixelRasterization", ENABLE_PIXEL_RASTERIZATION);
+
+        shader.setParameter("enableScreenCurvature", ENABLE_SCREEN_CURVATURE);
+        shader.setParameter("screenCurvature", SCREEN_CURVATURE);
+    }
+
     sf::Clock generation_timer;
 
     sf::CircleShape cell_shape(CELL_SHAPE_SIZE / 2); // Takes a radius
@@ -24,6 +48,15 @@ int main(int argc, char* argv[]) {
 		static_cast<float>(FLASH_MESSAGE_OFFSET_X),
 		static_cast<float>(FLASH_MESSAGE_OFFSET_Y));
     flash_message.setColor(FLASH_MESSAGE_COLOR);
+
+    // Frame to avoid artifacts on edges of texture when curvature is applied
+    sf::RectangleShape frame_shapes[] {
+        sf::RectangleShape(sf::Vector2f(1, VIDEO_MODE_HEIGHT)),
+        sf::RectangleShape(sf::Vector2f(VIDEO_MODE_WIDTH, 1)),
+    };
+    for(auto& frame_shape: frame_shapes) {
+        frame_shape.setFillColor(sf::Color::Black);
+    }
 
     // Center origin on the screen, and make positive-Y axis point up instead of down
     sf::Transform global_transform;
@@ -200,20 +233,37 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        window.clear(sf::Color::Black);
+        render_texture.clear(sf::Color::Black);
 
         for(const Cell& cell: state) {
             cell_shape.setPosition(
                 static_cast<float>(cell.X() * CELL_GRID_SIZE),
 				static_cast<float>(cell.Y() * CELL_GRID_SIZE));
-            window.draw(cell_shape, global_transform * viewport_transform);
+            render_texture.draw(cell_shape, global_transform * viewport_transform);
         }
 
         if(flash_message.is_displayed()) {
             flash_message.Update();
-            window.draw(flash_message);
+            render_texture.draw(flash_message);
         }
 
+        frame_shapes[0].setPosition(0, 0);
+        render_texture.draw(frame_shapes[0]);
+
+        frame_shapes[0].setPosition(VIDEO_MODE_WIDTH - 1, 0);
+        render_texture.draw(frame_shapes[0]);
+
+        frame_shapes[1].setPosition(0, 0);
+        render_texture.draw(frame_shapes[1]);
+
+        frame_shapes[1].setPosition(0, VIDEO_MODE_HEIGHT - 1);
+        render_texture.draw(frame_shapes[1]);
+
+        render_texture.display();
+
+        const sf::Texture& texture = render_texture.getTexture();
+        sf::Sprite sprite(texture);
+        window.draw(sprite, &shader);
         window.display();
     }
 

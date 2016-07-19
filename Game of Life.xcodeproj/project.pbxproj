@@ -13,6 +13,7 @@
 		FA3E31291D3DE20E00661F7D /* gameoflife.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E31271D3DE20E00661F7D /* gameoflife.cpp */; };
 		FA3E312C1D3DE3E000661F7D /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E312A1D3DE3E000661F7D /* resources.cpp */; };
 		FA3E31301D3DE5B500661F7D /* flashmessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */; };
+		FA748FC61D3E2EA10035DB42 /* crt.frag in Resources */ = {isa = PBXBuildFile; fileRef = FA748FC41D3E2EA10035DB42 /* crt.frag */; };
 		FAA538DC1D3DBAC20048D5FF /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = FAA538DB1D3DBAC20048D5FF /* input.txt */; };
 		FAA538DE1D3DBADC0048D5FF /* Inconsolata-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -33,6 +34,7 @@
 		FA3E312D1D3DE4A100661F7D /* constants.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = constants.hpp; sourceTree = SOURCE_ROOT; };
 		FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flashmessage.cpp; sourceTree = SOURCE_ROOT; };
 		FA3E312F1D3DE5B500661F7D /* flashmessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = flashmessage.hpp; sourceTree = SOURCE_ROOT; };
+		FA748FC41D3E2EA10035DB42 /* crt.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = crt.frag; sourceTree = SOURCE_ROOT; };
 		FAA538DB1D3DBAC20048D5FF /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = SOURCE_ROOT; };
 		FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inconsolata-Regular.ttf"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -98,6 +100,7 @@
 		FA2B1E3C1D3DB7540050BA8D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FA748FC41D3E2EA10035DB42 /* crt.frag */,
 				FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */,
 				FAA538DB1D3DBAC20048D5FF /* input.txt */,
 			);
@@ -161,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAA538DC1D3DBAC20048D5FF /* input.txt in Resources */,
+				FA748FC61D3E2EA10035DB42 /* crt.frag in Resources */,
 				FAA538DE1D3DBADC0048D5FF /* Inconsolata-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

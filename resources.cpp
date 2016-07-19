@@ -54,3 +54,35 @@ sf::Font load_font(const std::string& filename) {
 
     return font;
 }
+
+bool load_vertex_shader(sf::Shader& shader, const std::string& filename) {
+    if (!shader.loadFromFile(resourcePath() + filename, sf::Shader::Vertex)) {
+        std::cerr << "Failed to load vertex shader: " << resourcePath() + filename << "\n";
+        return false;
+    }
+
+    return true;
+}
+
+bool load_fragment_shader(sf::Shader& shader, const std::string& filename) {
+    if (!shader.loadFromFile(resourcePath() + filename, sf::Shader::Fragment)) {
+        std::cerr << "Failed to load fragment shader: " << resourcePath() + filename << "\n";
+        return false;
+    }
+
+    return true;
+}
+
+bool load_full_shader(sf::Shader& shader, const std::string& vertex_shader_filename, const std::string& fragment_shader_filename) {
+    if (!shader.loadFromFile(
+            resourcePath() + vertex_shader_filename,
+            resourcePath() + fragment_shader_filename)) {
+        std::cerr << "Failed to load full shader: "
+            << resourcePath() + vertex_shader_filename
+            << " " << resourcePath() + fragment_shader_filename
+            << "\n";
+        return false;
+    }
+
+    return true;
+}

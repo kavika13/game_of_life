@@ -96,6 +96,11 @@
     <ClInclude Include="ResourcePath.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="crt.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Inconsolata-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <FileType>Document</FileType>
