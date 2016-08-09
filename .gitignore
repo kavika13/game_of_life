@@ -1,6 +1,9 @@
 game_of_life
 input.txt
 
+*.sublime-project
+*.sublime-workspace
+
 SFML-2.3.2/
 SFML-2.3.2-osx-clang-universal/
 
