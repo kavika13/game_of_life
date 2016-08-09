@@ -21,22 +21,22 @@
 /* Begin PBXFileReference section */
 		FA2B1E321D3DB7540050BA8D /* Game of Life.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Game of Life.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA2B1E361D3DB7540050BA8D /* Game of Life-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Game of Life-Info.plist"; sourceTree = "<group>"; };
-		FA2B1E371D3DB7540050BA8D /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
-		FA2B1E391D3DB7540050BA8D /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
-		FA2B1E3A1D3DB7540050BA8D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		FA3E31231D3DDBCA00661F7D /* cell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cell.cpp; sourceTree = SOURCE_ROOT; };
-		FA3E31241D3DDBCA00661F7D /* cell.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cell.hpp; sourceTree = SOURCE_ROOT; };
-		FA3E31261D3DE20E00661F7D /* arraysize.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = arraysize.hpp; sourceTree = SOURCE_ROOT; };
-		FA3E31271D3DE20E00661F7D /* gameoflife.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gameoflife.cpp; sourceTree = SOURCE_ROOT; };
-		FA3E31281D3DE20E00661F7D /* gameoflife.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = gameoflife.hpp; sourceTree = SOURCE_ROOT; };
-		FA3E312A1D3DE3E000661F7D /* resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = resources.cpp; sourceTree = SOURCE_ROOT; };
-		FA3E312B1D3DE3E000661F7D /* resources.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = resources.hpp; sourceTree = SOURCE_ROOT; };
-		FA3E312D1D3DE4A100661F7D /* constants.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = constants.hpp; sourceTree = SOURCE_ROOT; };
-		FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flashmessage.cpp; sourceTree = SOURCE_ROOT; };
-		FA3E312F1D3DE5B500661F7D /* flashmessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = flashmessage.hpp; sourceTree = SOURCE_ROOT; };
-		FA748FC41D3E2EA10035DB42 /* crt.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = crt.frag; sourceTree = SOURCE_ROOT; };
-		FAA538DB1D3DBAC20048D5FF /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = SOURCE_ROOT; };
-		FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inconsolata-Regular.ttf"; sourceTree = SOURCE_ROOT; };
+		FA2B1E371D3DB7540050BA8D /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ResourcePath.mm; path = src/ResourcePath.mm; sourceTree = SOURCE_ROOT; };
+		FA2B1E391D3DB7540050BA8D /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ResourcePath.hpp; path = src/ResourcePath.hpp; sourceTree = SOURCE_ROOT; };
+		FA2B1E3A1D3DB7540050BA8D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E31231D3DDBCA00661F7D /* cell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cell.cpp; path = src/cell.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E31241D3DDBCA00661F7D /* cell.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cell.hpp; path = src/cell.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E31261D3DE20E00661F7D /* arraysize.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = arraysize.hpp; path = src/arraysize.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E31271D3DE20E00661F7D /* gameoflife.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gameoflife.cpp; path = src/gameoflife.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E31281D3DE20E00661F7D /* gameoflife.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = gameoflife.hpp; path = src/gameoflife.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E312A1D3DE3E000661F7D /* resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resources.cpp; path = src/resources.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E312B1D3DE3E000661F7D /* resources.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = resources.hpp; path = src/resources.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E312D1D3DE4A100661F7D /* constants.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = constants.hpp; path = src/constants.hpp; sourceTree = SOURCE_ROOT; };
+		FA3E312E1D3DE5B500661F7D /* flashmessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = flashmessage.cpp; path = src/flashmessage.cpp; sourceTree = SOURCE_ROOT; };
+		FA3E312F1D3DE5B500661F7D /* flashmessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = flashmessage.hpp; path = src/flashmessage.hpp; sourceTree = SOURCE_ROOT; };
+		FA748FC41D3E2EA10035DB42 /* crt.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = crt.frag; path = resources/crt.frag; sourceTree = SOURCE_ROOT; };
+		FAA538DB1D3DBAC20048D5FF /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = input.txt; path = resources/input.txt; sourceTree = SOURCE_ROOT; };
+		FAA538DD1D3DBADC0048D5FF /* Inconsolata-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Inconsolata-Regular.ttf"; path = "resources/Inconsolata-Regular.ttf"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,8 +86,8 @@
 				FA2B1E351D3DB7540050BA8D /* Supporting Files */,
 			);
 			name = "Game of Life";
-			path = .;
-			sourceTree = "<group>";
+			path = src;
+			sourceTree = SOURCE_ROOT;
 		};
 		FA2B1E351D3DB7540050BA8D /* Supporting Files */ = {
 			isa = PBXGroup;
@@ -95,7 +95,7 @@
 				FA2B1E361D3DB7540050BA8D /* Game of Life-Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		FA2B1E3C1D3DB7540050BA8D /* Resources */ = {
 			isa = PBXGroup;
@@ -105,7 +105,8 @@
 				FAA538DB1D3DBAC20048D5FF /* input.txt */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
+			path = resources;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 

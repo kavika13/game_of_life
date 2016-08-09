@@ -1,0 +1,44 @@
+BUILD_DIR=$(TUP_CWD)/build
+OUTPUT_DIR=$(BUILD_DIR)/products
+INTERMEDIATE_DIR=$(BUILD_DIR)/tmp
+
+ifeq (@(DEBUG),y)
+  OUTPUT_DIR=$(OUTPUT_DIR)/debug
+  INTERMEDIATE_DIR=$(INTERMEDIATE_DIR)/debug
+else
+  OUTPUT_DIR=$(OUTPUT_DIR)/release
+  INTERMEDIATE_DIR=$(INTERMEDIATE_DIR)/release
+endif
+
+ifeq (@(TUP_PLATFORM),macosx)
+  OUTPUT_APP_DIR=$(OUTPUT_DIR)/GameOfLife.app/Contents
+  OUTPUT_APP_RESOURCE_DIR=$(OUTPUT_APP_DIR)/Resources
+  OUTPUT_APP_BIN_DIR=$(OUTPUT_APP_DIR)/MacOS
+  OUTPUT_APP_FRAMEWORK_DIR=$(OUTPUT_APP_DIR)/Frameworks
+  # TODO: Make SFML_VERSION a config variable
+  SFML_VERSION=2.3.2
+  SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)-osx-clang-universal
+  SFML_FRAMEWORKS_DIR=$(SFML_DIR)/Frameworks
+  SFML_EXT_FRAMEWORKS_DIR=$(SFML_DIR)/extlibs
+endif
+
+CXX=g++
+
+CXXFLAGS=-std=c++14 -Wall
+CPPFLAGS=-I$(SFML_DIR)/include
+
+LDFLAGS=-lstdc++
+
+ifeq (@(TUP_PLATFORM),macosx)
+  LDFLAGS+=-Xlinker -rpath -Xlinker @loader_path/../Frameworks
+endif
+
+ifeq (@(DEBUG),y)
+  CXXFLAGS += -g
+else
+  CXXFLAGS += -Os
+endif
+
+!cxx = |> $(CXX) $(CXXFLAGS) $(CXXFLAGS_%f) $(CPPFLAGS) $(CPPFLAGS_%f) -o "%o" -c "%f" |>
+!ld = |> $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS) -o "%o" |>
+!cp = |> cp "%f" "%o" |>

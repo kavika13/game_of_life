@@ -1,0 +1,7 @@
+include_rules
+
+ifeq (@(TUP_PLATFORM),macosx)
+  : foreach *.* |> !cp |> $(OUTPUT_APP_RESOURCE_DIR)/%b
+else
+  : foreach *.* |> !cp |> $(OUTPUT_DIR)/%b
+endif

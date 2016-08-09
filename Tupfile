@@ -1,0 +1,35 @@
+include_rules
+
+ifeq (@(TUP_PLATFORM),macosx)
+  LDFLAGS+=-F$(SFML_FRAMEWORKS_DIR)
+  LDLIBS+=-framework sfml-system -framework sfml-window -framework sfml-graphics -framework sfml-audio -framework sfml-network -fobjc-link-runtime
+  PLISTBUDDY=/usr/libexec/PlistBuddy
+
+  GENERIC_VERSION=A
+endif
+
+# TODO: Handle flags for linking dependencies on other platforms
+
+ifeq (@(TUP_PLATFORM),macosx)
+  : <objs> |> !ld %<objs> |> $(OUTPUT_APP_BIN_DIR)/GameOfLife
+  : *.plist |> !cp && $(TUP_CWD)/expand_info_plist.sh "%o" |> $(OUTPUT_APP_DIR)/Info.plist {plist}
+  : {plist} |> $(TUP_CWD)/create_pkginfo.sh "%f" "%o" |> $(OUTPUT_APP_DIR)/PkgInfo
+
+  run ./create_framework_copy_rules.sh "$(SFML_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "sfml-system" "$(SFML_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "sfml-window" "$(SFML_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "sfml-graphics" "$(SFML_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "sfml-audio" "$(SFML_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "sfml-network" "$(SFML_VERSION)"
+
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "FLAC" "$(GENERIC_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "freetype" "$(GENERIC_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "ogg" "$(GENERIC_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "OpenAL" "$(GENERIC_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "vorbis" "$(GENERIC_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "vorbisenc" "$(GENERIC_VERSION)"
+  run ./create_framework_copy_rules.sh "$(SFML_EXT_FRAMEWORKS_DIR)" "$(OUTPUT_APP_FRAMEWORK_DIR)" "vorbisfile" "$(GENERIC_VERSION)"
+else
+  : <objs> |> !ld %<objs> |> $(OUTPUT_DIR)/game_of_life
+
+  # TODO: Copy dependencies
+endif
