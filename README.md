@@ -55,7 +55,7 @@ Allowed comment characters are: `#`, `//`, `;`
 
 ## Build
 
-### For Visual Studio
+### For Visual Studio on Windows
 
 - Install Visual C++ 2015 (must be 64 bit version - not sure if that's default?)
 - Download SFML 2.3.2, extract it, and drop it in build folder as SFML-2.3.2
@@ -63,15 +63,12 @@ Allowed comment characters are: `#`, `//`, `;`
 - Pick X64 build target
 - Build the solution
 
-### For XCode
+### For tup on OSX
 
-- Install XCode 7
-- Download SFML 2.3.2, and extract it. The location doesn't matter for XCode builds, since we're linking to Frameworks
-- Copy the contents of Frameworks and extlibs to /Library/Frameworks (See: http://www.sfml-dev.org/tutorials/2.3/start-osx.php)
-- Open the project
-- Build the project
-
-(Note: I plan to get a true cross-platform/cross-target build system working once I've researched and picked one)
+- Install [tup](http://gittup.org/tup/), ideally following the instructions for the git master branch
+- Install XCode 7 and [the command line tools](https://developer.apple.com/library/ios/technotes/tn2339/_index.html)
+- Download SFML 2.3.2, and extract it, and drop it in the build folder as SFML-2.3.2-osx-clang-universal
+- Run `tup` from anywhere in the build truee
 
 ## Techmologiez
 
