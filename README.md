@@ -1,7 +1,5 @@
 # Conway's Game of Life
 
-A project I built over the course of a week in July 2016. I started it for an interview, and later augmented for fun :)
-
 ## What is this thing?
 
 It is sort of like a zero-player video game. Many people have collaborated over the years to learn interesting things from it (and are still doing so).
