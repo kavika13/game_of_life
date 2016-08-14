@@ -129,6 +129,8 @@ int main(int argc, char* argv[]) {
 
     flash_message.Display("Simulation begins paused.\n\n" + instructions_message);
 
+    window.setActive();
+
     while(window.isOpen()) {
         sf::Event event;
 
