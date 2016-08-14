@@ -13,6 +13,11 @@ ifeq (@(TUP_PLATFORM),win32cross)
   LDLIBS+=-lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network
 endif
 
+ifeq (@(TUP_PLATFORM),win32)
+  LDFLAGS+=-L$(SFML_LIBRARIES_DIR)
+  LDLIBS+=-lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network
+endif
+
 ifeq (@(TUP_PLATFORM),macosx)
   : <objs> |> !ld |> $(OUTPUT_APP_BIN_DIR)/GameOfLife
   : *.plist |> !cp && $(TUP_CWD)/expand_info_plist.sh "%o" |> $(OUTPUT_APP_DIR)/Info.plist {plist}
@@ -34,6 +39,11 @@ ifeq (@(TUP_PLATFORM),macosx)
 endif
 
 ifeq (@(TUP_PLATFORM),win32cross)
-  : <objs> |> !ld |> $(OUTPUT_DIR)/game_of_life
+  : <objs> |> !ld |> $(OUTPUT_DIR)/game_of_life.exe
+  : foreach $(SFML_BIN_DIR)/*.dll |> !cp |> $(OUTPUT_DIR)/%b
+endif
+
+ifeq (@(TUP_PLATFORM),win32)
+  : <objs> |> !ld |> $(OUTPUT_DIR)/game_of_life.exe
   : foreach $(SFML_BIN_DIR)/*.dll |> !cp |> $(OUTPUT_DIR)/%b
 endif

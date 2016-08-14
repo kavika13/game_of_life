@@ -21,7 +21,7 @@ endif
 
 # Library paths
 
-SFML_VERSION=2.3.2
+SFML_VERSION=2.4.0
 
 ifdef SFML_VERSION
   SFML_VERSION=@(SFML_VERSION)
@@ -35,12 +35,21 @@ ifeq (@(TUP_PLATFORM),win32cross)
   SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)-mingw
 endif
 
+ifeq (@(TUP_PLATFORM),win32)
+  SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)
+endif
+
 ifeq (@(TUP_PLATFORM),macosx)
   SFML_FRAMEWORKS_DIR=$(SFML_DIR)/Frameworks
   SFML_EXT_FRAMEWORKS_DIR=$(SFML_DIR)/extlibs
 endif
 
 ifeq (@(TUP_PLATFORM),win32cross)
+  SFML_LIBRARIES_DIR=$(SFML_DIR)/lib
+  SFML_BIN_DIR=$(SFML_DIR)/bin
+endif
+
+ifeq (@(TUP_PLATFORM),win32)
   SFML_LIBRARIES_DIR=$(SFML_DIR)/lib
   SFML_BIN_DIR=$(SFML_DIR)/bin
 endif
