@@ -28,7 +28,7 @@ ifdef SFML_VERSION
 endif
 
 ifeq (@(TUP_PLATFORM),macosx)
-  SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)-osx-clang-universal
+  SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)-osx-clang
 endif
 
 ifeq (@(TUP_PLATFORM),win32cross)
