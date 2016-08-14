@@ -1,3 +1,5 @@
+# Output and intermediate paths
+
 BUILD_DIR=$(TUP_CWD)/build
 OUTPUT_DIR=$(BUILD_DIR)/products
 INTERMEDIATE_DIR=$(BUILD_DIR)/tmp
@@ -15,12 +17,35 @@ ifeq (@(TUP_PLATFORM),macosx)
   OUTPUT_APP_RESOURCE_DIR=$(OUTPUT_APP_DIR)/Resources
   OUTPUT_APP_BIN_DIR=$(OUTPUT_APP_DIR)/MacOS
   OUTPUT_APP_FRAMEWORK_DIR=$(OUTPUT_APP_DIR)/Frameworks
-  # TODO: Make SFML_VERSION a config variable
-  SFML_VERSION=2.3.2
+endif
+
+# Library paths
+
+SFML_VERSION=2.3.2
+
+ifdef SFML_VERSION
+  SFML_VERSION=@(SFML_VERSION)
+endif
+
+ifeq (@(TUP_PLATFORM),macosx)
   SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)-osx-clang-universal
+endif
+
+ifeq (@(TUP_PLATFORM),win32cross)
+  SFML_DIR=$(TUP_CWD)/SFML-$(SFML_VERSION)-mingw
+endif
+
+ifeq (@(TUP_PLATFORM),macosx)
   SFML_FRAMEWORKS_DIR=$(SFML_DIR)/Frameworks
   SFML_EXT_FRAMEWORKS_DIR=$(SFML_DIR)/extlibs
 endif
+
+ifeq (@(TUP_PLATFORM),win32cross)
+  SFML_LIBRARIES_DIR=$(SFML_DIR)/lib
+  SFML_BIN_DIR=$(SFML_DIR)/bin
+endif
+
+# Compiler and tool configuration
 
 CXX=g++
 
@@ -28,6 +53,8 @@ CXXFLAGS=-std=c++14 -Wall
 CPPFLAGS=-I$(SFML_DIR)/include
 
 LDFLAGS=-lstdc++
+
+CP=cp
 
 ifeq (@(TUP_PLATFORM),macosx)
   LDFLAGS+=-Xlinker -rpath -Xlinker @loader_path/../Frameworks
@@ -39,6 +66,30 @@ else
   CXXFLAGS += -Os
 endif
 
+ifdef CXX
+  CXX=@(CXX)
+endif
+
+ifdef CP
+  CP=@(CP)
+endif
+
+ifdef CXXFLAGS
+  CXXFLAGS=@(CXXFLAGS)
+endif
+
+ifdef CPPFLAGS
+  CPPFLAGS=@(CPPFLAGS)
+endif
+
+ifdef LDFLAGS
+  LDFLAGS=@(LDFLAGS)
+endif
+
+ifdef LDLIBS
+  LDLIBS=@(LDLIBS)
+endif
+
 !cxx = |> $(CXX) $(CXXFLAGS) $(CXXFLAGS_%f) $(CPPFLAGS) $(CPPFLAGS_%f) -o "%o" -c "%f" |>
-!ld = |> $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS) -o "%o" |>
-!cp = |> cp "%f" "%o" |>
+!ld = |> $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) %<objs> $(LDLIBS) -o "%o" |>
+!cp = |> $(CP) "%f" "%o" |>
