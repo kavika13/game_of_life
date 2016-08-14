@@ -8,8 +8,8 @@ public:
     FlashMessage();
     FlashMessage(const sf::Font& font, unsigned int character_size=30);
 
-    void setColor(const sf::Color& color);
-    const sf::Color& getColor() const;
+    void setFillColor(const sf::Color& color);
+    const sf::Color& getFillColor() const;
 
     void Display(const std::string& message);
     void Update();

@@ -5,7 +5,7 @@ FlashMessage::FlashMessage()
     : milliseconds_to_display_(MILLISECONDS_DISPLAY_FLASH_MESSAGE)
     , milliseconds_to_fade_(MILLISECONDS_FADE_FLASH_MESSAGE)
     , is_displayed_(false)
-    , base_color_(sf::Text::getColor())
+    , base_color_(sf::Text::getFillColor())
 {
 }
 
@@ -14,23 +14,23 @@ FlashMessage::FlashMessage(const sf::Font& font, unsigned int character_size)
     , milliseconds_to_display_(MILLISECONDS_DISPLAY_FLASH_MESSAGE)
     , milliseconds_to_fade_(MILLISECONDS_FADE_FLASH_MESSAGE)
     , is_displayed_(false)
-    , base_color_(sf::Text::getColor())
+    , base_color_(sf::Text::getFillColor())
 {
 }
 
-void FlashMessage::setColor(const sf::Color& color) {
+void FlashMessage::setFillColor(const sf::Color& color) {
     base_color_ = color;
-    sf::Text::setColor(color);
+    sf::Text::setFillColor(color);
 }
 
-const sf::Color& FlashMessage::getColor() const {
+const sf::Color& FlashMessage::getFillColor() const {
     return base_color_;
 }
 
 void FlashMessage::Display(const std::string& message) {
     is_displayed_ = true;
     setString(message);
-    sf::Text::setColor(base_color_);
+    sf::Text::setFillColor(base_color_);
     timer_.restart();
 }
 
@@ -42,7 +42,7 @@ void FlashMessage::Update() {
     } else if(time_message_displayed < milliseconds_to_display_ + milliseconds_to_fade_) {
         sf::Color fade_color = sf::Color(base_color_);
         fade_color.a = static_cast<sf::Uint8>(255 - static_cast<float>(time_message_displayed - milliseconds_to_display_) / milliseconds_to_fade_ * 255);
-        sf::Text::setColor(fade_color);
+        sf::Text::setFillColor(fade_color);
     } else {
         is_displayed_ = false;
     }

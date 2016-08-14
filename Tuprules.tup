@@ -58,7 +58,7 @@ endif
 
 CXX=g++
 
-CXXFLAGS=-std=c++14 -Wall
+CXXFLAGS=-std=c++14 -Wall -Werror
 CPPFLAGS=-I$(SFML_DIR)/include
 
 LDFLAGS=-lstdc++

@@ -28,17 +28,17 @@ int main(int argc, char* argv[]) {
     if(load_fragment_shader(shader, "crt.frag")) {
         is_shader_enabled = true;
 
-        shader.setParameter("texture", sf::Shader::CurrentTexture);
-        shader.setParameter("textureSize", window.getSize().x, window.getSize().y);
+        shader.setUniform("texture", sf::Shader::CurrentTexture);
+        shader.setUniform("textureSize", sf::Vector2f(window.getSize().x, window.getSize().y));
 
-        shader.setParameter("devicePixelRatio", DEVICE_PIXEL_RATIO);
-        shader.setParameter("virtualResolution", VIRTUAL_RESOLUTION_WIDTH, VIRTUAL_RESOLUTION_HEIGHT);
+        shader.setUniform("devicePixelRatio", DEVICE_PIXEL_RATIO);
+        shader.setUniform("virtualResolution", sf::Vector2f(VIRTUAL_RESOLUTION_WIDTH, VIRTUAL_RESOLUTION_HEIGHT));
 
-        shader.setParameter("enableScanlines", ENABLE_SCANLINES);
-        shader.setParameter("enablePixelRasterization", ENABLE_PIXEL_RASTERIZATION);
+        shader.setUniform("enableScanlines", ENABLE_SCANLINES);
+        shader.setUniform("enablePixelRasterization", ENABLE_PIXEL_RASTERIZATION);
 
-        shader.setParameter("enableScreenCurvature", ENABLE_SCREEN_CURVATURE);
-        shader.setParameter("screenCurvature", SCREEN_CURVATURE);
+        shader.setUniform("enableScreenCurvature", ENABLE_SCREEN_CURVATURE);
+        shader.setUniform("screenCurvature", SCREEN_CURVATURE);
     }
 
     sf::Clock generation_timer;
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     flash_message.setPosition(
 		static_cast<float>(FLASH_MESSAGE_OFFSET_X),
 		static_cast<float>(FLASH_MESSAGE_OFFSET_Y));
-    flash_message.setColor(FLASH_MESSAGE_COLOR);
+    flash_message.setFillColor(FLASH_MESSAGE_COLOR);
 
     // Frame to avoid artifacts on edges of texture when curvature is applied
     sf::RectangleShape frame_shapes[] {
